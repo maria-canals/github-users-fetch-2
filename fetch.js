@@ -33,7 +33,7 @@ getForm.addEventListener('submit', (e) => {
 })
 
 const render = async (userFromApi) => {
-    const user = await (userFromApi)
+    const user = await userFromApi;
     userInfo = {
         userName: user.login,
         avatar: user.avatar_url,
