@@ -1,12 +1,12 @@
 
 const fetchGitHubUsers = async (userName) => {
-
-    const response = await fetch(`https://api.github.com/users/${userName}`);
-    if (!response.ok) {
-        return 'error';
+    try {
+        const response = await axios.get(`https://api.github.com/users/${userName}`);
+        return response.data;
+    } catch (error) {
+        errorMessage();
+        setTimeout(cleanErrorMessage, 4000);
     }
-    return await response.json();
-
 }
 
 const table = document.getElementById("myTable");
@@ -23,7 +23,6 @@ const cleanErrorMessage = () => {
     pError.remove();
 }
 
-
 getForm.addEventListener('submit', (e) => {
     const inputSubmitted = document.getElementById('githubuser').value;
     const userFromApi = fetchGitHubUsers(inputSubmitted);
@@ -35,27 +34,22 @@ getForm.addEventListener('submit', (e) => {
 
 const render = async (userFromApi) => {
     const user = await (userFromApi)
-    if (user !== 'error') {
-        userInfo = {
-            userName: user.login,
-            avatar: user.avatar_url,
-            bio: user.bio,
-            htmlUrl: user.url
-        };
-        const row = table.insertRow(1);
-        const cell1 = row.insertCell(0);
-        const cell2 = row.insertCell(1);
-        const cell3 = row.insertCell(2);
-        const cell4 = row.insertCell(3);
+    userInfo = {
+        userName: user.login,
+        avatar: user.avatar_url,
+        bio: user.bio,
+        htmlUrl: user.url
+    };
+    const row = table.insertRow(1);
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1);
+    const cell3 = row.insertCell(2);
+    const cell4 = row.insertCell(3);
 
-        cell1.textContent = userInfo.userName;
-        cell2.innerHTML = `<img src=${userInfo.avatar}>`;
-        cell3.textContent = userInfo.bio;
-        cell4.textContent = userInfo.htmlUrl;
-    } else {
-        errorMessage();
-        setTimeout(cleanErrorMessage, 4000);
-    }
-
+    cell1.textContent = userInfo.userName;
+    cell2.innerHTML = `<img src=${userInfo.avatar}>`;
+    cell3.textContent = userInfo.bio;
+    cell4.textContent = userInfo.htmlUrl;
 }
+
 
